@@ -1,0 +1,6 @@
+# Indexing is also controlled by the robots meta tag.
+# Set indexable: true in src/data/site.ts when the real copy is published.
+User-agent: *
+Allow: /
+
+Sitemap: https://pocolocomarket.com/sitemap-index.xml

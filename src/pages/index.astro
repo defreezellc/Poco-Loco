@@ -1,0 +1,178 @@
+---
+import { getCollection } from 'astro:content';
+import PlaceholderFrame from '../components/PlaceholderFrame.astro';
+import StorefrontArt from '../components/StorefrontArt.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { site } from '../data/site';
+import { isPlaceholderEmail, sampleCount } from '../lib/format';
+
+const [menu, events, gallery, zine] = await Promise.all([
+  getCollection('menu'),
+  getCollection('events'),
+  getCollection('gallery'),
+  getCollection('zine'),
+]);
+
+const doors = [
+  {
+    href: '/menu',
+    tone: 'chili',
+    index: '01',
+    title: 'Menu',
+    text: `${sampleCount(menu.length, 'item')} Food, drinks, and goods from the market.`,
+    go: 'See the sample menu',
+  },
+  {
+    href: '/events',
+    tone: 'mango',
+    index: '02',
+    title: 'Events',
+    text: `${sampleCount(events.length, 'date')} Market days, nights, and anything else worth showing up for.`,
+    go: 'See the sample events',
+  },
+  {
+    href: '/gallery',
+    tone: 'cactus',
+    index: '03',
+    title: 'Gallery',
+    text: `${sampleCount(gallery.length, 'photo')} Frames waiting for pictures from real gatherings.`,
+    go: 'See the sample gallery',
+  },
+  {
+    href: '/zine',
+    tone: 'grape',
+    index: '04',
+    title: 'Zine',
+    text: `${sampleCount(zine.length, 'issue')} A home for essays, recipes, and little stories.`,
+    go: 'See the sample zine',
+  },
+];
+
+const marquee =
+  'Sample produce · Sample coffee · Sample lunch · Sample tunes · Sample photos · Sample zines · Sample neighbors · ';
+---
+
+<BaseLayout title={site.name}>
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-copy">
+        <p class="kicker">Sample homepage</p>
+        <h1 class="hero-title" aria-label={site.name}>
+          <span class="line">Poco</span>
+          <span class="line">Loco</span>
+          <span class="market">Market</span>
+        </h1>
+        <p class="hero-lede">
+          <span class="sample-chip">Draft tagline</span>
+          <span>{site.tagline}</span>
+        </p>
+        <div class="button-row">
+          <a class="button" href="/menu">Peek at the menu</a>
+          <a class="button secondary" href="/events">See what’s on</a>
+        </div>
+      </div>
+      <figure class="hero-art">
+        <StorefrontArt />
+        <figcaption>Sample illustration of a market storefront.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <p>{marquee}</p>
+      <p>{marquee}</p>
+    </div>
+  </div>
+
+  <section class="section" aria-labelledby="about-heading">
+    <div class="container about-grid">
+      <div class="about-copy">
+        <p class="kicker">About</p>
+        <h2 id="about-heading">A market with its story still on the counter.</h2>
+        {site.about.map((paragraph) => <p>{paragraph}</p>)}
+        <span class="sample-chip">Sample copy</span>
+      </div>
+      <figure class="about-figure">
+        <PlaceholderFrame title="The storefront" tone="cactus" />
+        <figcaption>Sample image. A real photo of the market can replace this frame.</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section follow" aria-labelledby="rooms-heading">
+    <div class="container">
+      <div class="section-intro">
+        <p class="kicker">On the site</p>
+        <h2 id="rooms-heading">Four rooms, ready when you are.</h2>
+        <p>The pages are built. The contents are samples, waiting for the real menu, dates, photos, and zine.</p>
+      </div>
+      <div class="door-grid">
+        {
+          doors.map((door) => (
+            <a class="door" href={door.href} data-tone={door.tone}>
+              <span class="door-index">{door.index}</span>
+              <h2>{door.title}</h2>
+              <p>{door.text}</p>
+              <span class="door-go">{door.go}</span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section visit" aria-labelledby="visit-heading">
+    <div class="container">
+      <div class="visit-grid">
+        <div>
+          <h2 id="visit-heading">Come by <span class="sample-chip">Sample info</span></h2>
+          <p class="visit-intro">
+            Address, hours, and contact details are placeholders. Swap them for the real ones when you have them.
+          </p>
+        </div>
+        <div>
+          <h3>Address</h3>
+          <p class="address">
+            {site.address.map((line) => (
+              <>
+                {line}
+                <br />
+              </>
+            ))}
+          </p>
+        </div>
+        <div>
+          <h3>Hours</h3>
+          <ul class="hours">
+            {site.hours.map((row) => (
+              <li>
+                <span>{row.days}</span>
+                <span>{row.time}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="hello">
+          <h3>Hello</h3>
+          {
+            isPlaceholderEmail(site.email) ? (
+              <p>
+                <span class="sample-chip">Sample email</span>
+                <span class="email-line">{site.email}</span>
+              </p>
+            ) : (
+              <p>
+                <a href={`mailto:${site.email}`}>{site.email}</a>
+              </p>
+            )
+          }
+        </div>
+      </div>
+      <div class="map-placeholder">
+        <strong>Sample map</strong>
+        <span>A real map can go here once the address is set.</span>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

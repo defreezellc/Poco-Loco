@@ -1,0 +1,49 @@
+---
+import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import { formatLongDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+  const issues = await getCollection('zine');
+  return issues.map((issue) => ({
+    params: { id: issue.id },
+    props: { issue },
+  }));
+}
+
+interface Props {
+  issue: CollectionEntry<'zine'>;
+}
+
+const { issue } = Astro.props;
+const { Content } = await render(issue);
+---
+
+<PageLayout
+  title={issue.data.title}
+  description={issue.data.summary}
+  kicker={`Issue ${issue.data.issue}`}
+  heading={issue.data.title}
+  lede={issue.data.summary}
+>
+  <p class="event-meta">
+    {issue.data.placeholder && <span class="sample-chip">Sample issue</span>}
+    {' '}
+    {issue.data.status} · {formatLongDate(issue.data.date)}
+  </p>
+  <div class="issue-layout">
+    <div class="zine-cover" aria-hidden="true">
+      <span class="zine-cover-kicker">Poco Loco</span>
+      <div class="zine-cover-panel">
+        <span>Issue {issue.data.issue}</span>
+        <strong>{issue.data.title}</strong>
+      </div>
+      <span class="zine-cover-foot">Sample cover</span>
+    </div>
+    <div class="prose">
+      <Content />
+      <p><a href="/zine">Back to the zine shelf</a></p>
+    </div>
+  </div>
+</PageLayout>

@@ -1,0 +1,52 @@
+---
+import { getCollection } from 'astro:content';
+import { menuCategories } from '../data/site';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const items = (await getCollection('menu')).sort(
+  (a, b) => a.data.order - b.data.order || a.data.name.localeCompare(b.data.name),
+);
+
+const groups = menuCategories
+  .map((category) => ({
+    category,
+    items: items.filter((item) => item.data.category === category),
+  }))
+  .filter((group) => group.items.length > 0);
+---
+
+<PageLayout
+  title="Menu"
+  description="Sample menu for Poco Loco Market. Dishes and prices are placeholders."
+  kicker="Sample menu"
+  heading="Something for the table."
+  lede="A sample list of food, drinks, and market goods. Nothing here is for sale yet."
+>
+  <p class="sample-note">
+    Every item is a sample, and every price is fake. Edit the markdown files in <code>src/content/menu</code> when the real menu is ready.
+  </p>
+
+  {
+    groups.length === 0 ? (
+      <p class="empty">No menu items yet. Add a markdown file in <code>src/content/menu</code>.</p>
+    ) : (
+      groups.map((group) => (
+        <section class="menu-category">
+          <h2>{group.category}</h2>
+          <ul class="menu-list">
+            {group.items.map((item) => (
+              <li class="menu-item">
+                <p class="item-name">
+                  <strong>{item.data.name}</strong>
+                  {item.data.placeholder && <span class="sample-chip">Sample</span>}
+                </p>
+                <p class="item-price">{item.data.price}</p>
+                <p class="item-detail">{item.data.detail}</p>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    )
+  }
+</PageLayout>
