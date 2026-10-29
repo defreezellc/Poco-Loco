@@ -1,8 +1,7 @@
+# Pull requests. Pushes to main are built and deployed by pages.yml.
 name: Build
 
 on:
-  push:
-    branches: [main]
   pull_request:
 
 jobs:

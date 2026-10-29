@@ -3,6 +3,7 @@ import { getCollection, render } from 'astro:content';
 import type { CollectionEntry } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 import { formatLongDate } from '../../lib/format';
+import { sitePath } from '../../lib/url';
 
 export async function getStaticPaths() {
   const issues = await getCollection('zine');
@@ -43,7 +44,7 @@ const { Content } = await render(issue);
     </div>
     <div class="prose">
       <Content />
-      <p><a href="/zine">Back to the zine shelf</a></p>
+      <p><a href={sitePath('/zine')}>Back to the zine shelf</a></p>
     </div>
   </div>
 </PageLayout>

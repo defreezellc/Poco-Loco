@@ -5,6 +5,7 @@ import '../styles/global.css';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { site } from '../data/site';
+import { sitePath } from '../lib/url';
 
 interface Props {
   title: string;
@@ -29,7 +30,7 @@ const canonical = Astro.site ? new URL(Astro.url.pathname, Astro.site) : Astro.u
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonical.href} />
     <link rel="canonical" href={canonical.href} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href={sitePath('/favicon.svg')} type="image/svg+xml" />
     <title>{fullTitle}</title>
   </head>
   <body>

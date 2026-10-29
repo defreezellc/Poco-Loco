@@ -15,7 +15,7 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:4321](http://localhost:4321).
+Open [http://localhost:4321/Poco-Loco/](http://localhost:4321/Poco-Loco/). Local dev uses the same `/Poco-Loco/` base path as the GitHub Pages test site, so links match production.
 
 Other commands:
 
@@ -107,7 +107,7 @@ placeholder: false
 ---
 ```
 
-`image` must start with `/`. `imageAlt` is required whenever `image` is set — describe the picture for someone who cannot see it. `tone` (`chili`, `mango`, `cactus`, `grape`, or `sky`) only shows while the frame is still a sample.
+`image` must start with `/` and should not include the `/Poco-Loco` base. The build adds that prefix. `imageAlt` is required whenever `image` is set — describe the picture for someone who cannot see it. `tone` (`chili`, `mango`, `cactus`, `grape`, or `sky`) only shows while the frame is still a sample.
 
 ### Zine
 
@@ -124,9 +124,9 @@ placeholder: false
 ---
 ```
 
-Then write the issue in Markdown underneath. The newest issue is featured on the Zine page, and each issue gets its own URL, such as `/zine/issue-01`.
+Then write the issue in Markdown underneath. The newest issue is featured on the Zine page, and each issue gets its own URL, such as `/zine/issue-01`. On the GitHub Pages test site that address is `/Poco-Loco/zine/issue-01`. You still write `/zine/issue-01` in links. The build adds the base path.
 
-A picture inside an issue works the same way as the gallery: save it under `public/images/` and embed it with Markdown:
+A picture inside an issue works the same way as the gallery: save it under `public/images/` and embed it with a root-relative path. Do not include `/Poco-Loco` in the path. The build adds the base.
 
 ```markdown
 ![Stacks of the new issue on the counter](/images/zine/issue-01-stack.jpg)
@@ -134,22 +134,26 @@ A picture inside an issue works the same way as the gallery: save it under `publ
 
 ## Deploy
 
-`npm run build` creates the site in `dist/`. Upload that folder, or connect the repo and let the host build it.
+The test site is [https://defreezellc.github.io/Poco-Loco/](https://defreezellc.github.io/Poco-Loco/). `.github/workflows/pages.yml` builds and deploys on every push to `main`. Pull requests are only typechecked and built, by `.github/workflows/build.yml`.
 
-| Host | Build command | Publish directory |
-| --- | --- | --- |
-| [Cloudflare Pages](https://pages.cloudflare.com) | `npm run build` | `dist` |
-| [Netlify](https://www.netlify.com) | `npm run build` | `dist` |
-| [Vercel](https://vercel.com) | `npm run build` | `dist` (Astro preset) |
-| [GitHub Pages](https://pages.github.com) | `npm run build` | `dist` |
+Before the first deploy, in the GitHub repo open **Settings → Pages** and set **Build and deployment → Source** to **GitHub Actions**. Leave the custom domain blank. After that workflow succeeds, the site is at the URL above.
 
-Use Node 20 or newer on the host. A GitHub Actions workflow in `.github/workflows/build.yml` already runs the typecheck and build on pull requests.
+`npm run build` writes the static site to `dist/`. The defaults in `astro.config.mjs` publish it under `/Poco-Loco/`.
 
-For a custom domain, add `pocolocomarket.com` in the host’s dashboard and follow that host’s DNS instructions. The site is built for the domain root (`https://pocolocomarket.com/`). If you ever serve it from a subpath, set [`base`](https://docs.astro.build/en/reference/configuration-reference/#base) in `astro.config.mjs`.
+### Switch to pocolocomarket.com later
 
-GitHub Pages only: add a `public/CNAME` file containing `pocolocomarket.com` before you deploy. Leave that file out on other hosts.
+Change the two defaults at the top of `astro.config.mjs` (or set the same values as env vars when you build):
+
+```bash
+SITE=https://pocolocomarket.com
+BASE_PATH=/
+```
+
+`BASE_PATH=/` is the domain root. Links and assets drop the `/Poco-Loco` prefix. Then, in **Settings → Pages**, set the custom domain to `pocolocomarket.com` and follow GitHub’s DNS instructions. Do not add a `CNAME` file until you make that switch. The GitHub Actions workflow itself does not need to change.
 
 Until `indexable` is `true` in `src/data/site.ts`, pages send `noindex`, so sample copy is less likely to show up in search.
+
+Other static hosts (Cloudflare Pages, Netlify, Vercel) can serve the same `dist/` folder. Use them with `BASE_PATH=/` and `SITE` set to that host’s URL, unless you are also serving the site from a subpath.
 
 ## Favicon
 

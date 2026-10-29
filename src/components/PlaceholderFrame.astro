@@ -1,5 +1,6 @@
 ---
 import type { FrameTone } from '../data/site';
+import { sitePath } from '../lib/url';
 
 interface Props {
   title: string;
@@ -10,7 +11,8 @@ interface Props {
 }
 
 const { title, tone = 'mango', image, imageAlt, label = 'Sample image' } = Astro.props;
-const src = image?.trim();
+const raw = image?.trim();
+const src = raw && raw.startsWith('/') ? sitePath(raw) : raw;
 ---
 
 <div class="frame" data-tone={tone}>
