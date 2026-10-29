@@ -1,0 +1,41 @@
+---
+import { nav, site, socials } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div>
+      <a class="logo" href="/">
+        <span class="logo-mark" aria-hidden="true">PL</span>
+        <span>
+          <span class="logo-name">Poco Loco</span>
+          <span class="logo-sub">Market</span>
+        </span>
+      </a>
+      {
+        socials.length > 0 && (
+          <ul class="socials">
+            {socials.map((link) => (
+              <li>
+                <a href={link.href} rel="noreferrer">{link.label}</a>
+              </li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+    <div>
+      <ul class="footer-nav">
+        <li><a href="/">Home</a></li>
+        {nav.map((item) => (
+          <li><a href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+      <p class="fineprint">
+        © {year} {site.name}. Sample site — the copy, prices, dates, and pictures are placeholders.
+      </p>
+    </div>
+  </div>
+</footer>

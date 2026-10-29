@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../layouts/PageLayout.astro';
+import { splitIsoDate } from '../lib/format';
+
+const events = (await getCollection('events')).sort(
+  (a, b) => a.data.date.localeCompare(b.data.date) || a.data.title.localeCompare(b.data.title),
+);
+---
+
+<PageLayout
+  title="Events"
+  description="Sample events listing for Poco Loco Market. Dates and details are placeholders."
+  kicker="Sample events"
+  heading="What’s happening."
+  lede="A few pretend dates, so the calendar has a shape. None of these gatherings are real yet."
+>
+  <p class="sample-note">
+    Replace these with real events by adding markdown files in <code>src/content/events</code>. Each file needs a date, a time, and a place.
+  </p>
+
+  {
+    events.length === 0 ? (
+      <p class="empty">No events yet. Add a markdown file in <code>src/content/events</code>.</p>
+    ) : (
+      <div class="event-list">
+        {events.map((event) => {
+          const parts = splitIsoDate(event.data.date);
+          return (
+            <article class="event-card">
+              <time class="date-badge" datetime={event.data.date}>
+                <span class="month">{parts.month}</span>
+                <span class="day">{parts.day}</span>
+                <span class="year">{parts.year}</span>
+              </time>
+              <div>
+                {event.data.placeholder && <span class="sample-chip">Sample</span>}
+                <h2>{event.data.title}</h2>
+                <p class="event-meta">
+                  {event.data.time} · {event.data.place}
+                </p>
+                <p>{event.data.summary}</p>
+              </div>
+            </article>
+          );
+        })}
+      </div>
+    )
+  }
+</PageLayout>

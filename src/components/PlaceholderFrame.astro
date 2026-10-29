@@ -1,0 +1,24 @@
+---
+import type { FrameTone } from '../data/site';
+
+interface Props {
+  title: string;
+  tone?: FrameTone;
+  image?: string;
+  imageAlt?: string;
+  label?: string;
+}
+
+const { title, tone = 'mango', image, imageAlt, label = 'Sample image' } = Astro.props;
+const src = image?.trim();
+---
+
+<div class="frame" data-tone={tone}>
+  {
+    src ? (
+      <img src={src} alt={imageAlt || title} loading="lazy" decoding="async" />
+    ) : (
+      <span class="frame-label">{label}</span>
+    )
+  }
+</div>

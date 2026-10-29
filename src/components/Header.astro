@@ -1,0 +1,73 @@
+---
+import { nav } from '../data/site';
+
+const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+function isCurrent(href: string) {
+  return current === href || current.startsWith(`${href}/`);
+}
+---
+
+<header class="site-header">
+  <div class="bar container">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true">PL</span>
+      <span>
+        <span class="logo-name">Poco Loco</span>
+        <span class="logo-sub">Market</span>
+      </span>
+    </a>
+    <div class="bar-end">
+      <button
+        class="nav-toggle"
+        type="button"
+        aria-expanded="false"
+        aria-controls="site-nav"
+        aria-label="Open navigation"
+        data-nav-toggle
+      >
+        <span class="burger" aria-hidden="true"></span>
+      </button>
+      <nav id="site-nav" class="nav-links" data-nav-links aria-label="Primary">
+        {
+          nav.map((item) => (
+            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.querySelector('[data-nav-toggle]');
+  const links = document.querySelector('[data-nav-links]');
+  const header = document.querySelector('.site-header');
+
+  if (toggle instanceof HTMLButtonElement && links instanceof HTMLElement && header) {
+    const setOpen = (open: boolean) => {
+      links.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    links.addEventListener('click', (event) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') setOpen(false);
+    });
+
+    document.addEventListener('click', (event) => {
+      if (event.target instanceof Node && !header.contains(event.target)) setOpen(false);
+    });
+  }
+</script>

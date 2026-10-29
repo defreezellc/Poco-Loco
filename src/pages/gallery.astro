@@ -1,0 +1,47 @@
+---
+import { getCollection } from 'astro:content';
+import PlaceholderFrame from '../components/PlaceholderFrame.astro';
+import PageLayout from '../layouts/PageLayout.astro';
+
+const photos = (await getCollection('gallery')).sort(
+  (a, b) => a.data.order - b.data.order || a.data.title.localeCompare(b.data.title),
+);
+---
+
+<PageLayout
+  title="Gallery"
+  description="Sample photo gallery for Poco Loco Market. These frames stand in for real event pictures."
+  kicker="Sample gallery"
+  heading="Pictures from days that have not happened yet."
+  lede="Patterned frames hold the page until real photos are ready. Each one is marked as a sample."
+>
+  <p class="sample-note">
+    Add a photo by putting an image in <code>public/images</code> and pointing a file in <code>src/content/gallery</code> at it. Until then, these frames stay obviously fake.
+  </p>
+
+  {
+    photos.length === 0 ? (
+      <p class="empty">No photos yet. Add a markdown file in <code>src/content/gallery</code>.</p>
+    ) : (
+      <div class="gallery-grid">
+        {photos.map((photo) => (
+          <figure class="polaroid">
+            <PlaceholderFrame
+              title={photo.data.title}
+              tone={photo.data.tone}
+              image={photo.data.image}
+              imageAlt={photo.data.imageAlt}
+            />
+            <figcaption>
+              <strong>
+                {photo.data.title}
+                {photo.data.placeholder && <span class="sample-chip">Sample</span>}
+              </strong>
+              <span>{photo.data.caption}</span>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    )
+  }
+</PageLayout>

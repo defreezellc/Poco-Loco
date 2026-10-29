@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '../../layouts/PageLayout.astro';
+import { formatLongDate } from '../../lib/format';
+
+const issues = (await getCollection('zine')).sort((a, b) => b.data.date.localeCompare(a.data.date));
+const [latest, ...older] = issues;
+---
+
+<PageLayout
+  title="Zine"
+  description="Sample zine shelf for Poco Loco Market. Issue 00 is a placeholder, not a real publication."
+  kicker="Sample zine"
+  heading="A little paper, eventually."
+  lede="The zine has a shelf and a sample issue. The essays, recipes, and interviews are still unwritten."
+>
+  <p class="sample-note">
+    Each issue is a markdown file in <code>src/content/zine</code>. The newest one shows up here, and the file body becomes the issue page.
+  </p>
+
+  {
+    latest ? (
+      <article class="zine-feature">
+        <div class="zine-cover" aria-hidden="true">
+          <span class="zine-cover-kicker">Poco Loco</span>
+          <div class="zine-cover-panel">
+            <span>Issue {latest.data.issue}</span>
+            <strong>{latest.data.title}</strong>
+          </div>
+          <span class="zine-cover-foot">Sample cover</span>
+        </div>
+        <div class="zine-copy">
+          {latest.data.placeholder && <span class="sample-chip">Sample issue</span>}
+          <h2>{latest.data.title}</h2>
+          <p class="event-meta">
+            {latest.data.status} · {formatLongDate(latest.data.date)}
+          </p>
+          <p>{latest.data.summary}</p>
+          <a class="button" href={`/zine/${latest.id}`}>Read the sample issue</a>
+        </div>
+      </article>
+    ) : (
+      <p class="empty">No issues yet. Add a markdown file in <code>src/content/zine</code>.</p>
+    )
+  }
+
+  {
+    older.length > 0 && (
+      <ul class="issue-list">
+        {older.map((issue) => (
+          <li>
+            <a class="issue-card" href={`/zine/${issue.id}`}>
+              <span class="kicker">Issue {issue.data.issue}</span>
+              <h2>{issue.data.title}</h2>
+              <p>{issue.data.summary}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+</PageLayout>
