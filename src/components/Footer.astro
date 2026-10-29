@@ -1,5 +1,6 @@
 ---
 import { nav, site, socials } from '../data/site';
+import { sitePath } from '../lib/url';
 
 const year = new Date().getFullYear();
 ---
@@ -7,7 +8,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container footer-grid">
     <div>
-      <a class="logo" href="/">
+      <a class="logo" href={sitePath('/')}>
         <span class="logo-mark" aria-hidden="true">PL</span>
         <span>
           <span class="logo-name">Poco Loco</span>
@@ -28,9 +29,9 @@ const year = new Date().getFullYear();
     </div>
     <div>
       <ul class="footer-nav">
-        <li><a href="/">Home</a></li>
+        <li><a href={sitePath('/')}>Home</a></li>
         {nav.map((item) => (
-          <li><a href={item.href}>{item.label}</a></li>
+          <li><a href={sitePath(item.href)}>{item.label}</a></li>
         ))}
       </ul>
       <p class="fineprint">

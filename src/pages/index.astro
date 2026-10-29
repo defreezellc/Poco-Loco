@@ -5,6 +5,7 @@ import StorefrontArt from '../components/StorefrontArt.astro';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { site } from '../data/site';
 import { isPlaceholderEmail, sampleCount } from '../lib/format';
+import { sitePath } from '../lib/url';
 
 const [menu, events, gallery, zine] = await Promise.all([
   getCollection('menu'),
@@ -67,8 +68,8 @@ const marquee =
           <span>{site.tagline}</span>
         </p>
         <div class="button-row">
-          <a class="button" href="/menu">Peek at the menu</a>
-          <a class="button secondary" href="/events">See what’s on</a>
+          <a class="button" href={sitePath('/menu')}>Peek at the menu</a>
+          <a class="button secondary" href={sitePath('/events')}>See what’s on</a>
         </div>
       </div>
       <figure class="hero-art">
@@ -110,7 +111,7 @@ const marquee =
       <div class="door-grid">
         {
           doors.map((door) => (
-            <a class="door" href={door.href} data-tone={door.tone}>
+            <a class="door" href={sitePath(door.href)} data-tone={door.tone}>
               <span class="door-index">{door.index}</span>
               <h2>{door.title}</h2>
               <p>{door.text}</p>

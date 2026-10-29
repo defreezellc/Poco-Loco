@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { sitePath } from '../lib/url';
 ---
 
 <BaseLayout title="Page not found" description="That page is not part of the Poco Loco Market site.">
@@ -9,7 +10,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       <h1>This page wandered off.</h1>
       <p class="lede">That address is not on the site. The market is still back on the homepage.</p>
       <div class="button-row">
-        <a class="button" href="/">Back to the homepage</a>
+        <a class="button" href={sitePath('/')}>Back to the homepage</a>
       </div>
     </div>
   </header>

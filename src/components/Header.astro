@@ -1,16 +1,18 @@
 ---
 import { nav } from '../data/site';
+import { logicalPath, sitePath } from '../lib/url';
 
-const current = Astro.url.pathname.replace(/\/$/, '') || '/';
+const current = logicalPath(Astro.url.pathname);
 
 function isCurrent(href: string) {
-  return current === href || current.startsWith(`${href}/`);
+  const path = logicalPath(href);
+  return current === path || (path !== '/' && current.startsWith(`${path}/`));
 }
 ---
 
 <header class="site-header">
   <div class="bar container">
-    <a class="logo" href="/">
+    <a class="logo" href={sitePath('/')}>
       <span class="logo-mark" aria-hidden="true">PL</span>
       <span>
         <span class="logo-name">Poco Loco</span>
@@ -31,7 +33,7 @@ function isCurrent(href: string) {
       <nav id="site-nav" class="nav-links" data-nav-links aria-label="Primary">
         {
           nav.map((item) => (
-            <a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+            <a href={sitePath(item.href)} aria-current={isCurrent(item.href) ? 'page' : undefined}>
               {item.label}
             </a>
           ))

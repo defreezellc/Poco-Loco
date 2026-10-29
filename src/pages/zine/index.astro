@@ -2,6 +2,7 @@
 import { getCollection } from 'astro:content';
 import PageLayout from '../../layouts/PageLayout.astro';
 import { formatLongDate } from '../../lib/format';
+import { sitePath } from '../../lib/url';
 
 const issues = (await getCollection('zine')).sort((a, b) => b.data.date.localeCompare(a.data.date));
 const [latest, ...older] = issues;
@@ -36,7 +37,7 @@ const [latest, ...older] = issues;
             {latest.data.status} · {formatLongDate(latest.data.date)}
           </p>
           <p>{latest.data.summary}</p>
-          <a class="button" href={`/zine/${latest.id}`}>Read the sample issue</a>
+          <a class="button" href={sitePath(`/zine/${latest.id}`)}>Read the sample issue</a>
         </div>
       </article>
     ) : (
@@ -49,7 +50,7 @@ const [latest, ...older] = issues;
       <ul class="issue-list">
         {older.map((issue) => (
           <li>
-            <a class="issue-card" href={`/zine/${issue.id}`}>
+            <a class="issue-card" href={sitePath(`/zine/${issue.id}`)}>
               <span class="kicker">Issue {issue.data.issue}</span>
               <h2>{issue.data.title}</h2>
               <p>{issue.data.summary}</p>

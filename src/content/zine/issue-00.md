@@ -7,7 +7,7 @@ status: Sample
 placeholder: true
 ---
 
-This page is a stand-in for the first Poco Loco zine. Replace the words, or add a new file beside this one, when there is a real issue to publish.
+This page is a stand-in for the first Poco Loco zine. Replace the words, or add a new file beside this one, when there is a real issue to publish. The [sample menu](/menu) is the same kind of placeholder.
 
 ## A sample essay
 
